@@ -49,6 +49,10 @@
   <ItemGroup>
     <Compile Include="Data\Structures.cs" />
     <Compile Include="DataStore.cs" />
+    <Compile Include="DataStructures\BinaryTree.cs" />
+    <Compile Include="DataStructures\BinarySearchTree.cs" />
+    <Compile Include="DataStructures\AVLTree.cs" />
+    <Compile Include="DataStructures\RedBlackTree.cs" />
     <Compile Include="EventStore.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
@@ -89,6 +93,7 @@
     </Compile>
     <Compile Include="Tests\DataStructureTests.cs" />
     <Compile Include="Tests\ServiceRequestTests.cs" />
+    <Compile Include="Tests\TreeStructureTests.cs" />
     <EmbeddedResource Include="LocalEventsForm.resx">
       <DependentUpon>LocalEventsForm.cs</DependentUpon>
     </EmbeddedResource>
