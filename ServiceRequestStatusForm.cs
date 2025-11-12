@@ -35,6 +35,17 @@ namespace MunicipalServiceApp
         }
 
         /// <summary>
+        /// Override OnShown to refresh data when form is displayed
+        /// </summary>
+        protected override void OnShown(EventArgs e)
+        {
+            base.OnShown(e);
+            // Reload data when form is shown to get latest requests
+            _repository.Load();
+            LoadAllRequests();
+        }
+
+        /// <summary>
         /// Sets up the form when it loads - populates status filter and loads requests.
         /// </summary>
         private void InitializeForm()

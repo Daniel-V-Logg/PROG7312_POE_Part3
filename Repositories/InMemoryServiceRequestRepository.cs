@@ -138,6 +138,12 @@ namespace MunicipalServiceApp.Repositories
 
                 var json = JsonConvert.SerializeObject(_requests, Formatting.Indented);
                 File.WriteAllText(_dataFilePath, json);
+                
+                // Verify the file was written
+                if (!File.Exists(_dataFilePath))
+                {
+                    throw new IOException($"File was not created at {_dataFilePath}");
+                }
             }
             catch (Exception ex)
             {

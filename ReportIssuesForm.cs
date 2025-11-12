@@ -8,16 +8,20 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using MunicipalServiceApp.Models;
+using MunicipalServiceApp.Repositories;
 
 namespace MunicipalServiceApp
 {
     public partial class ReportIssuesForm : Form
     {
         private string attachmentPath = string.Empty; // field to hold attached file path
+        private readonly IServiceRequestRepository _repository;
 
         public ReportIssuesForm()
         {
             InitializeComponent();
+            _repository = new InMemoryServiceRequestRepository();
             engagementProgressBar.Value = 30; // initial encouragement level
             lblEncouragement.Text = "You're almost there. A few details go a long way.";
 
@@ -101,7 +105,7 @@ namespace MunicipalServiceApp
                     return;
                 }
 
-                // Create and save issue
+                // Create and save issue (legacy Issue for DataStore)
                 var issue = new Issue(
                     txtLocation.Text.Trim(),
                     cmbCategory.Text,
@@ -111,16 +115,79 @@ namespace MunicipalServiceApp
 
                 DataStore.AddIssue(issue);
 
+                // Also create and save as ServiceRequest for the repository
+                // Parse location to extract coordinates if in format "lat,lon" or use defaults
+                double latitude = -26.2041; // Default Johannesburg coordinates
+                double longitude = 28.0473;
+                
+                string locationText = txtLocation.Text.Trim();
+                if (locationText.Contains(","))
+                {
+                    var parts = locationText.Split(',');
+                    if (parts.Length >= 2)
+                    {
+                        if (double.TryParse(parts[0].Trim(), out double lat) && 
+                            double.TryParse(parts[1].Trim(), out double lon))
+                        {
+                            latitude = lat;
+                            longitude = lon;
+                        }
+                    }
+                }
+
+                // Determine priority based on category
+                int priority = 3; // Default medium priority
+                string category = cmbCategory.Text.ToLower();
+                if (category.Contains("emergency") || category.Contains("urgent") || category.Contains("safety"))
+                    priority = 1; // High priority
+                else if (category.Contains("maintenance") || category.Contains("repair"))
+                    priority = 2;
+                else if (category.Contains("request") || category.Contains("suggestion"))
+                    priority = 5; // Low priority
+
+                // Create ServiceRequest
+                var serviceRequest = new ServiceRequest(
+                    title: $"{cmbCategory.Text} - {txtLocation.Text.Trim()}",
+                    description: rtbDescription.Text.Trim(),
+                    priority: priority,
+                    latitude: latitude,
+                    longitude: longitude,
+                    assignedTeamId: null // Unassigned initially
+                );
+
+                // Add to repository and save
+                _repository.Add(serviceRequest);
+                _repository.Save();
+
+                // Verify the save worked
+                var savedRequest = _repository.GetById(serviceRequest.RequestId);
+                if (savedRequest == null)
+                {
+                    throw new Exception("Failed to verify saved request. The request may not have been saved correctly.");
+                }
+
                 // Success feedback
-                MessageBox.Show("Issue reported successfully!\n\nReference: " + issue.ReportedAt.ToString("yyyy-MM-dd HH:mm") + 
-                    "\n\nThank you for helping improve our community.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show($"Issue reported successfully!\n\nRequest ID: {serviceRequest.RequestId}\n" +
+                    $"Title: {serviceRequest.Title}\n" +
+                    $"Priority: {serviceRequest.Priority}\n" +
+                    $"Reference: {issue.ReportedAt:yyyy-MM-dd HH:mm}\n" +
+                    $"\nThank you for helping improve our community.\n\n" +
+                    $"Note: The request has been saved and will appear in the Service Request Status form.", 
+                    "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                 // Reset form
                 ResetForm();
             }
             catch (Exception ex)
             {
-                MessageBox.Show("An error occurred while submitting your report. Please try again.\n\nError: " + ex.Message, 
+                string errorDetails = $"Error: {ex.Message}";
+                if (ex.InnerException != null)
+                {
+                    errorDetails += $"\n\nInner Exception: {ex.InnerException.Message}";
+                }
+                errorDetails += $"\n\nStack Trace: {ex.StackTrace}";
+                
+                MessageBox.Show("An error occurred while submitting your report. Please try again.\n\n" + errorDetails, 
                     "Submission Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
