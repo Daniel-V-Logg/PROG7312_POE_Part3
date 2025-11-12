@@ -55,6 +55,8 @@
     <Compile Include="DataStructures\RedBlackTree.cs" />
     <Compile Include="DataStructures\BinaryHeap.cs" />
     <Compile Include="DataStructures\PriorityQueue.cs" />
+    <Compile Include="DataStructures\Graph.cs" />
+    <Compile Include="DataStructures\GraphUtilities.cs" />
     <Compile Include="EventStore.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
@@ -99,6 +101,7 @@
     <Compile Include="Tests\ServiceRequestTests.cs" />
     <Compile Include="Tests\TreeStructureTests.cs" />
     <Compile Include="Tests\HeapAndSchedulerTests.cs" />
+    <Compile Include="Tests\GraphTests.cs" />
     <EmbeddedResource Include="LocalEventsForm.resx">
       <DependentUpon>LocalEventsForm.cs</DependentUpon>
     </EmbeddedResource>
