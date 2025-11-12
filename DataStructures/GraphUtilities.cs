@@ -124,6 +124,31 @@ namespace MunicipalServiceApp.DataStructures
             }
             return total;
         }
+
+        /// <summary>
+        /// Example: Builds a graph from ServiceRequest coordinates and computes MST for routing optimization.
+        /// This demonstrates how to use the Graph class with ServiceRequest objects to find optimal routing.
+        /// </summary>
+        /// <param name="requests">The list of service requests</param>
+        /// <param name="maxDistanceKm">Maximum distance in kilometers to create an edge (default: 50km)</param>
+        /// <returns>A tuple containing the graph, MST edges, and total MST distance</returns>
+        public static (Graph graph, List<Edge> mst, double totalDistance) BuildGraphAndComputeMST(
+            List<ServiceRequest> requests, 
+            double maxDistanceKm = 50.0)
+        {
+            // Build graph from service request coordinates
+            // Edges represent travel distances between request locations
+            Graph graph = BuildGraphFromRequests(requests, maxDistanceKm);
+
+            // Compute Minimum Spanning Tree using Kruskal's algorithm
+            // MST provides optimal routing to visit all locations with minimum total travel distance
+            List<Edge> mst = graph.MinimumSpanningTreeKruskal();
+
+            // Calculate total distance of the MST route
+            double totalDistance = CalculateTotalWeight(mst);
+
+            return (graph, mst, totalDistance);
+        }
     }
 }
 
