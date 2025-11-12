@@ -63,6 +63,13 @@ namespace MunicipalServiceApp
                 GraphTests.RunAllTests();
                 Console.WriteLine();
                 
+                // New unit and integration tests
+                DataStructureUnitTests.RunAllUnitTests();
+                Console.WriteLine();
+                
+                RepositoryIntegrationTests.RunAllIntegrationTests();
+                Console.WriteLine();
+                
                 Console.WriteLine("=========================================");
                 Console.WriteLine("ALL TEST SUITES COMPLETE");
                 Console.WriteLine("=========================================");

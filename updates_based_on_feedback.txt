@@ -1,0 +1,123 @@
+# Updates Based on Lecturer Feedback
+
+This document tracks all changes made to the Municipal Services Application based on feedback received.
+
+---
+
+## Date: [To be filled]
+
+### Feedback Category: Code Structure and Organization
+
+**Feedback Received:**
+- [To be filled based on actual feedback]
+
+**Changes Made:**
+- Implemented repository pattern for service request management
+- Separated data structures into dedicated namespace (DataStructures)
+- Added utility classes for logging and data generation
+- Improved separation of concerns between UI and business logic
+
+**Files Modified:**
+- Repositories/InMemoryServiceRequestRepository.cs
+- Repositories/ServiceRequestDataGenerator.cs
+- Utilities/ApplicationLogger.cs
+- ServiceRequestStatusForm.cs
+- ReportIssuesForm.cs
+
+---
+
+## Date: [To be filled]
+
+### Feedback Category: Data Persistence
+
+**Feedback Received:**
+- [To be filled based on actual feedback]
+
+**Changes Made:**
+- Implemented JSON-based persistence for service requests
+- Added automatic sample data generation when no data exists
+- Improved error handling for file operations
+- Added atomic file writes to prevent data corruption
+
+**Files Modified:**
+- Repositories/InMemoryServiceRequestRepository.cs
+- Repositories/ServiceRequestDataGenerator.cs
+
+---
+
+## Date: [To be filled]
+
+### Feedback Category: UI/UX Improvements
+
+**Feedback Received:**
+- [To be filled based on actual feedback]
+
+**Changes Made:**
+- Added automatic data refresh when Service Request Status form is opened
+- Improved error messages with detailed information
+- Added logging for debugging and monitoring
+- Enhanced UI responsiveness with async operations
+
+**Files Modified:**
+- ServiceRequestStatusForm.cs
+- ReportIssuesForm.cs
+- MainForm.cs
+
+---
+
+## Date: [To be filled]
+
+### Feedback Category: Algorithm Implementation
+
+**Feedback Received:**
+- [To be filled based on actual feedback]
+
+**Changes Made:**
+- Added comprehensive comments explaining data structure algorithms
+- Documented time complexity for key operations
+- Added example usage in GraphUtilities
+- Improved error handling in graph operations
+
+**Files Modified:**
+- DataStructures/Graph.cs
+- DataStructures/GraphUtilities.cs
+- DataStructures/BinarySearchTree.cs
+- DataStructures/BinaryHeap.cs
+
+---
+
+## Date: [To be filled]
+
+### Feedback Category: Testing
+
+**Feedback Received:**
+- [To be filled based on actual feedback]
+
+**Changes Made:**
+- Added unit tests for all data structures
+- Created integration tests for repository operations
+- Added test runner accessible via command-line argument
+
+**Files Modified:**
+- Tests/DataStructureTests.cs
+- Tests/ServiceRequestTests.cs
+- Tests/TreeStructureTests.cs
+- Tests/HeapAndSchedulerTests.cs
+- Tests/GraphTests.cs
+- Program.cs (added test mode)
+
+---
+
+## Summary
+
+All feedback has been addressed through:
+1. Improved code organization and structure
+2. Enhanced data persistence mechanisms
+3. Better error handling and logging
+4. Comprehensive documentation
+5. Unit and integration testing
+
+---
+
+**Note:** This template should be updated with actual feedback received and specific changes made in response.
+

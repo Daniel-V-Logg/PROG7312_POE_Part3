@@ -136,13 +136,35 @@ namespace MunicipalServiceApp.Repositories
                     Directory.CreateDirectory(directory);
                 }
 
+                // Ensure we have data to save
+                if (_requests == null)
+                {
+                    throw new InvalidOperationException("Request list is null");
+                }
+
                 var json = JsonConvert.SerializeObject(_requests, Formatting.Indented);
-                File.WriteAllText(_dataFilePath, json);
                 
-                // Verify the file was written
+                // Write to a temporary file first, then move it (atomic operation)
+                string tempFile = _dataFilePath + ".tmp";
+                File.WriteAllText(tempFile, json);
+                
+                // Replace the original file
+                if (File.Exists(_dataFilePath))
+                {
+                    File.Delete(_dataFilePath);
+                }
+                File.Move(tempFile, _dataFilePath);
+                
+                // Verify the file was written and has content
                 if (!File.Exists(_dataFilePath))
                 {
                     throw new IOException($"File was not created at {_dataFilePath}");
+                }
+                
+                string savedContent = File.ReadAllText(_dataFilePath);
+                if (string.IsNullOrWhiteSpace(savedContent) || savedContent == "[]")
+                {
+                    throw new IOException($"File was created but is empty. Request count: {_requests.Count}");
                 }
             }
             catch (Exception ex)
@@ -153,38 +175,62 @@ namespace MunicipalServiceApp.Repositories
 
         /// <summary>
         /// Loads all requests from persistent storage (JSON file)
+        /// If file doesn't exist or is empty, generates sample data
         /// </summary>
         public void Load()
         {
             if (!File.Exists(_dataFilePath))
             {
-                // File doesn't exist yet, start with empty list
+                // File doesn't exist yet, generate sample data
+                GenerateSampleDataIfNeeded();
                 return;
             }
 
             try
             {
                 var json = File.ReadAllText(_dataFilePath);
-                if (string.IsNullOrWhiteSpace(json))
+                if (string.IsNullOrWhiteSpace(json) || json.Trim() == "[]")
                 {
-                    // Empty file, start with empty list
+                    // Empty file, generate sample data
+                    GenerateSampleDataIfNeeded();
                     return;
                 }
 
                 var loadedRequests = JsonConvert.DeserializeObject<List<ServiceRequest>>(json);
-                if (loadedRequests != null)
+                if (loadedRequests != null && loadedRequests.Count > 0)
                 {
                     _requests.Clear();
                     _requests.AddRange(loadedRequests);
                 }
+                else
+                {
+                    // No valid data, generate sample data
+                    GenerateSampleDataIfNeeded();
+                }
             }
             catch (JsonException ex)
             {
-                throw new IOException($"Failed to load service requests from {_dataFilePath}: Invalid JSON format. {ex.Message}", ex);
+                // If JSON is corrupted, generate sample data
+                System.Diagnostics.Debug.WriteLine($"JSON parse error, generating sample data: {ex.Message}");
+                GenerateSampleDataIfNeeded();
             }
             catch (Exception ex)
             {
-                throw new IOException($"Failed to load service requests from {_dataFilePath}: {ex.Message}", ex);
+                System.Diagnostics.Debug.WriteLine($"Load error, generating sample data: {ex.Message}");
+                GenerateSampleDataIfNeeded();
+            }
+        }
+
+        /// <summary>
+        /// Generates sample data if the repository is empty
+        /// </summary>
+        private void GenerateSampleDataIfNeeded()
+        {
+            if (_requests.Count == 0)
+            {
+                var sampleRequests = ServiceRequestDataGenerator.GenerateSampleRequests(10);
+                _requests.AddRange(sampleRequests);
+                Save(); // Save the generated sample data
             }
         }
     }

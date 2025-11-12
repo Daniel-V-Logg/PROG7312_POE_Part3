@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ArrayOfIssue xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Issue>
+    <Location>Cape town</Location>
+    <Category>Roads</Category>
+    <Description>Potholes on eden road</Description>
+    <AttachmentPath />
+    <ReportedAt>2025-11-12T09:13:19.8438171+02:00</ReportedAt>
+  </Issue>
+  <Issue>
+    <Location>cape town</Location>
+    <Category>Roads</Category>
+    <Description>potholes on roads</Description>
+    <AttachmentPath />
+    <ReportedAt>2025-11-12T16:23:57.523097+02:00</ReportedAt>
+  </Issue>
+  <Issue>
+    <Location>dsfsadfsdf</Location>
+    <Category>Sanitation</Category>
+    <Description>sadasdfasdfasdfsdfsadfsdafsadf</Description>
+    <AttachmentPath>C:\Users\danie\source\repos\PROG7312_POE_Part3\bin\Debug\Data\Attachments\Human Capital.jpg</AttachmentPath>
+    <ReportedAt>2025-11-12T16:25:54.6152284+02:00</ReportedAt>
+  </Issue>
+  <Issue>
+    <Location>errefsefdg</Location>
+    <Category>Roads</Category>
+    <Description>sdfgsdfgsdfgsdfgsdfg</Description>
+    <AttachmentPath />
+    <ReportedAt>2025-11-12T16:27:27.5490586+02:00</ReportedAt>
+  </Issue>
+  <Issue>
+    <Location>sdgasdgasdg</Location>
+    <Category>Sanitation</Category>
+    <Description>asdgasdgasdgasdgsadgdsfg</Description>
+    <AttachmentPath />
+    <ReportedAt>2025-11-12T16:30:23.0366583+02:00</ReportedAt>
+  </Issue>
+  <Issue>
+    <Location>fgadfgasdgasdgasdg</Location>
+    <Category>Sanitation</Category>
+    <Description>asdgggggggggggggggggggggggggggggg</Description>
+    <AttachmentPath />
+    <ReportedAt>2025-11-12T16:41:49.6022754+02:00</ReportedAt>
+  </Issue>
+  <Issue>
+    <Location>adsfasdfasdf</Location>
+    <Category>Roads</Category>
+    <Description>sdafffffffffffffffff</Description>
+    <AttachmentPath />
+    <ReportedAt>2025-11-12T16:45:28.8676387+02:00</ReportedAt>
+  </Issue>
+  <Issue>
+    <Location>sdaffddd</Location>
+    <Category>Utilities</Category>
+    <Description>SDDDDDDDDDDDDDDDDDDDDD</Description>
+    <AttachmentPath />
+    <ReportedAt>2025-11-12T16:45:36.3967931+02:00</ReportedAt>
+  </Issue>
+  <Issue>
+    <Location>fadgfgasdg</Location>
+    <Category>Sanitation</Category>
+    <Description>sadfagggggggggggggg</Description>
+    <AttachmentPath />
+    <ReportedAt>2025-11-12T18:03:28.4219523+02:00</ReportedAt>
+  </Issue>
+</ArrayOfIssue>

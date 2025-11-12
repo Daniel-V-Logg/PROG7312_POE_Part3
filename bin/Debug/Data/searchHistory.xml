@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ArrayOfString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <string>culture</string>
+  <string>government</string>
+  <string>music</string>
+  <string>sports</string>
+  <string>art</string>
+  <string>culture</string>
+  <string>weekly</string>
+  <string>music</string>
+  <string>sports</string>
+  <string>community</string>
+  <string>community</string>
+  <string>music</string>
+  <string>festival</string>
+  <string>sports</string>
+  <string>community</string>
+  <string>culture</string>
+</ArrayOfString>

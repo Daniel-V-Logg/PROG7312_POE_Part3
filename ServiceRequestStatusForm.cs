@@ -8,6 +8,7 @@ using MunicipalServiceApp.Models;
 using MunicipalServiceApp.Repositories;
 using MunicipalServiceApp.DataStructures;
 using MunicipalServiceApp.Scheduling;
+using MunicipalServiceApp.Utilities;
 
 namespace MunicipalServiceApp
 {
@@ -26,7 +27,8 @@ namespace MunicipalServiceApp
         public ServiceRequestStatusForm()
         {
             InitializeComponent();
-            _repository = new InMemoryServiceRequestRepository();
+            // Use shared repository from MainForm
+            _repository = MainForm.GetSharedRepository();
             _requestIdBST = new BinarySearchTree<ServiceRequest, string>(req => req.RequestId);
             _currentDisplayedRequests = new List<ServiceRequest>();
             _mstEdges = new List<Edge>();
@@ -41,8 +43,16 @@ namespace MunicipalServiceApp
         {
             base.OnShown(e);
             // Reload data when form is shown to get latest requests
-            _repository.Load();
-            LoadAllRequests();
+            try
+            {
+                _repository.Load();
+                LoadAllRequests();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error loading service requests: {ex.Message}\n\nStack trace: {ex.StackTrace}", 
+                    "Load Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
         }
 
         /// <summary>
@@ -75,21 +85,45 @@ namespace MunicipalServiceApp
 
         /// <summary>
         /// Loads all service requests into the ListView and builds BST index.
+        /// Also populates heap and graph data structures.
         /// </summary>
         private void LoadAllRequests()
         {
-            var allRequests = _repository.GetAll().ToList();
-            _currentDisplayedRequests = allRequests;
-            
-            // Build BST index for fast RequestId lookup
-            _requestIdBST = new BinarySearchTree<ServiceRequest, string>(req => req.RequestId);
-            foreach (var request in allRequests)
+            try
             {
-                _requestIdBST.Insert(request);
+                ApplicationLogger.LogInfo("Loading service requests and populating data structures...");
+                
+                // Ensure we have the latest data
+                _repository.Load();
+                
+                var allRequests = _repository.GetAll().ToList();
+                _currentDisplayedRequests = allRequests;
+                
+                ApplicationLogger.LogInfo($"Loaded {allRequests.Count} service requests from repository.");
+                
+                // Build BST index for fast RequestId lookup
+                _requestIdBST = new BinarySearchTree<ServiceRequest, string>(req => req.RequestId);
+                foreach (var request in allRequests)
+                {
+                    _requestIdBST.Insert(request);
+                }
+                ApplicationLogger.LogInfo($"Populated BST with {allRequests.Count} requests for RequestId lookup.");
+                
+                // Note: Heap and Graph are populated on-demand when Schedule Team or Show Routing buttons are clicked
+                // This keeps the UI responsive and only builds these structures when needed
+                
+                DisplayRequests(allRequests);
+                UpdateStatusLabel($"Showing {allRequests.Count} service request(s)");
+                
+                ApplicationLogger.LogInfo("Service requests loaded and data structures populated successfully.");
             }
-            
-            DisplayRequests(allRequests);
-            UpdateStatusLabel($"Showing {allRequests.Count} service request(s)");
+            catch (Exception ex)
+            {
+                ApplicationLogger.LogError("Failed to load service requests", ex);
+                UpdateStatusLabel($"Error loading requests: {ex.Message}");
+                MessageBox.Show($"Error loading service requests: {ex.Message}", 
+                    "Load Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         /// <summary>
@@ -222,8 +256,19 @@ namespace MunicipalServiceApp
 
         private void btnRefresh_Click(object sender, EventArgs e)
         {
-            _repository.Load(); // Reload from JSON file
-            LoadAllRequests();
+            try
+            {
+                ApplicationLogger.LogInfo("Refreshing service requests from repository...");
+                _repository.Load(); // Reload from JSON file
+                LoadAllRequests(); // This will rebuild BST and update UI
+                ApplicationLogger.LogInfo("Service requests refreshed successfully.");
+            }
+            catch (Exception ex)
+            {
+                ApplicationLogger.LogError("Error refreshing service requests", ex);
+                MessageBox.Show($"Error refreshing data: {ex.Message}", "Refresh Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void lvRequests_SelectedIndexChanged(object sender, EventArgs e)
@@ -259,6 +304,7 @@ namespace MunicipalServiceApp
         {
             try
             {
+                ApplicationLogger.LogInfo("Scheduling requests using heap scheduler...");
                 btnScheduleTeam.Enabled = false;
                 UpdateStatusLabel("Scheduling requests...");
 
@@ -267,14 +313,18 @@ namespace MunicipalServiceApp
                     // Use the heap scheduler to get top requests
                     RequestScheduler scheduler = new RequestScheduler();
                     
-                    // Add all current displayed requests to scheduler
+                    // Add all current displayed requests to scheduler (populates heap)
                     foreach (var request in _currentDisplayedRequests)
                     {
                         scheduler.AddRequest(request);
                     }
 
-                    // Get top 5 requests
+                    ApplicationLogger.LogInfo($"Added {_currentDisplayedRequests.Count} requests to heap scheduler.");
+
+                    // Get top 5 requests (heap extraction)
                     var topRequests = scheduler.GetTopRequests(5);
+
+                    ApplicationLogger.LogInfo($"Retrieved top {topRequests.Count} priority requests from heap.");
 
                     // Update UI on main thread
                     this.Invoke((MethodInvoker)delegate
@@ -282,11 +332,13 @@ namespace MunicipalServiceApp
                         DisplayRequests(topRequests);
                         UpdateStatusLabel($"Scheduled top {topRequests.Count} priority requests");
                         btnScheduleTeam.Enabled = true;
+                        ApplicationLogger.LogInfo("UI updated with scheduled requests.");
                     });
                 });
             }
             catch (Exception ex)
             {
+                ApplicationLogger.LogError("Error during scheduling", ex);
                 MessageBox.Show($"An error occurred while scheduling: {ex.Message}", "Scheduling Error",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
                 btnScheduleTeam.Enabled = true;
@@ -307,16 +359,21 @@ namespace MunicipalServiceApp
                     return;
                 }
 
+                ApplicationLogger.LogInfo($"Building graph from {_currentDisplayedRequests.Count} service requests...");
                 btnShowRouting.Enabled = false;
                 UpdateStatusLabel("Computing MST routing...");
 
                 await Task.Run(() =>
                 {
-                    // Build graph from current displayed requests
+                    // Build graph from current displayed requests (populates graph data structure)
                     Graph graph = GraphUtilities.BuildGraphFromRequests(_currentDisplayedRequests, maxDistanceKm: 50.0);
+                    
+                    ApplicationLogger.LogInfo($"Graph built: {graph.VertexCount} vertices, {graph.EdgeCount} edges.");
                     
                     // Compute MST using Kruskal's algorithm
                     List<Edge> mst = graph.MinimumSpanningTreeKruskal();
+                    
+                    ApplicationLogger.LogInfo($"MST computed: {mst.Count} edges in minimum spanning tree.");
 
                     // Update UI on main thread
                     this.Invoke((MethodInvoker)delegate
@@ -332,11 +389,13 @@ namespace MunicipalServiceApp
                         double totalDistance = GraphUtilities.CalculateTotalWeight(mst);
                         UpdateStatusLabel($"MST routing computed. Total distance: {totalDistance:F2} km");
                         btnShowRouting.Enabled = true;
+                        ApplicationLogger.LogInfo($"MST visualization displayed. Total routing distance: {totalDistance:F2} km");
                     });
                 });
             }
             catch (Exception ex)
             {
+                ApplicationLogger.LogError("Error computing MST routing", ex);
                 MessageBox.Show($"An error occurred while computing routing: {ex.Message}", "Routing Error",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
                 btnShowRouting.Enabled = true;

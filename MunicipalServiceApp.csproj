@@ -82,7 +82,9 @@
     <Compile Include="Program.cs" />
     <Compile Include="Repositories\IServiceRequestRepository.cs" />
     <Compile Include="Repositories\InMemoryServiceRequestRepository.cs" />
+    <Compile Include="Repositories\ServiceRequestDataGenerator.cs" />
     <Compile Include="Scheduling\IScheduler.cs" />
+    <Compile Include="Utilities\ApplicationLogger.cs" />
     <Compile Include="Scheduling\RequestScheduler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReportIssuesForm.cs">
@@ -102,6 +104,8 @@
     <Compile Include="Tests\TreeStructureTests.cs" />
     <Compile Include="Tests\HeapAndSchedulerTests.cs" />
     <Compile Include="Tests\GraphTests.cs" />
+    <Compile Include="Tests\DataStructureUnitTests.cs" />
+    <Compile Include="Tests\RepositoryIntegrationTests.cs" />
     <EmbeddedResource Include="LocalEventsForm.resx">
       <DependentUpon>LocalEventsForm.cs</DependentUpon>
     </EmbeddedResource>

@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "QD3StJeLCn0=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\danie\\source\\repos\\PROG7312_POE_Part3\\MunicipalServiceApp.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\danie\\.nuget\\packages\\newtonsoft.json\\13.0.3\\newtonsoft.json.13.0.3.nupkg.sha512"
+  ],
+  "logs": []
+}

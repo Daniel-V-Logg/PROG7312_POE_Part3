@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using MunicipalServiceApp.Models;
 using MunicipalServiceApp.Repositories;
+using MunicipalServiceApp.Utilities;
 
 namespace MunicipalServiceApp
 {
@@ -21,7 +22,8 @@ namespace MunicipalServiceApp
         public ReportIssuesForm()
         {
             InitializeComponent();
-            _repository = new InMemoryServiceRequestRepository();
+            // Use shared repository from MainForm
+            _repository = MainForm.GetSharedRepository();
             engagementProgressBar.Value = 30; // initial encouragement level
             lblEncouragement.Text = "You're almost there. A few details go a long way.";
 
@@ -155,16 +157,25 @@ namespace MunicipalServiceApp
                     assignedTeamId: null // Unassigned initially
                 );
 
-                // Add to repository and save
+                ApplicationLogger.LogInfo($"Submitting new service request: {serviceRequest.Title}");
+                
+                // Add to repository
                 _repository.Add(serviceRequest);
-                _repository.Save();
-
-                // Verify the save worked
-                var savedRequest = _repository.GetById(serviceRequest.RequestId);
-                if (savedRequest == null)
+                
+                // Verify it was added to in-memory list
+                int countAfterAdd = _repository.GetAll().Count();
+                var verifyInMemory = _repository.GetById(serviceRequest.RequestId);
+                if (verifyInMemory == null || countAfterAdd == 0)
                 {
-                    throw new Exception("Failed to verify saved request. The request may not have been saved correctly.");
+                    ApplicationLogger.LogError($"Request was not added to repository. Count: {countAfterAdd}");
+                    throw new Exception($"Request was not added to repository. Count: {countAfterAdd}");
                 }
+                
+                ApplicationLogger.LogInfo($"Request added to repository. Total requests: {countAfterAdd}");
+                
+                // Save to file
+                _repository.Save();
+                ApplicationLogger.LogInfo($"Request saved to persistent storage. Request ID: {serviceRequest.RequestId}");
 
                 // Success feedback
                 MessageBox.Show($"Issue reported successfully!\n\nRequest ID: {serviceRequest.RequestId}\n" +
