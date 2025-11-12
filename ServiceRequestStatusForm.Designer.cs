@@ -52,9 +52,17 @@ namespace MunicipalServiceApp
             this.txtDetails = new System.Windows.Forms.TextBox();
             this.lblStatus = new System.Windows.Forms.Label();
             this.btnBack = new System.Windows.Forms.Button();
+            this.grpActions = new System.Windows.Forms.GroupBox();
+            this.btnScheduleTeam = new System.Windows.Forms.Button();
+            this.btnShowRouting = new System.Windows.Forms.Button();
+            this.grpMSTVisualization = new System.Windows.Forms.GroupBox();
+            this.btnCloseMST = new System.Windows.Forms.Button();
+            this.pnlMST = new System.Windows.Forms.Panel();
             this.grpSearch.SuspendLayout();
             this.grpRequests.SuspendLayout();
             this.grpDetails.SuspendLayout();
+            this.grpActions.SuspendLayout();
+            this.grpMSTVisualization.SuspendLayout();
             this.SuspendLayout();
             // 
             // grpSearch
@@ -266,7 +274,7 @@ namespace MunicipalServiceApp
             this.grpDetails.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.grpDetails.Location = new System.Drawing.Point(20, 440);
             this.grpDetails.Name = "grpDetails";
-            this.grpDetails.Size = new System.Drawing.Size(920, 120);
+            this.grpDetails.Size = new System.Drawing.Size(450, 120);
             this.grpDetails.TabIndex = 2;
             this.grpDetails.TabStop = false;
             this.grpDetails.Text = "Request Details";
@@ -279,7 +287,7 @@ namespace MunicipalServiceApp
             this.txtDetails.Name = "txtDetails";
             this.txtDetails.ReadOnly = true;
             this.txtDetails.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtDetails.Size = new System.Drawing.Size(890, 85);
+            this.txtDetails.Size = new System.Drawing.Size(420, 85);
             this.txtDetails.TabIndex = 0;
             // 
             // lblStatus
@@ -292,6 +300,86 @@ namespace MunicipalServiceApp
             this.lblStatus.Size = new System.Drawing.Size(118, 15);
             this.lblStatus.TabIndex = 3;
             this.lblStatus.Text = "Loading requests...";
+            // 
+            // grpActions
+            // 
+            this.grpActions.Controls.Add(this.btnScheduleTeam);
+            this.grpActions.Controls.Add(this.btnShowRouting);
+            this.grpActions.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.grpActions.Location = new System.Drawing.Point(490, 440);
+            this.grpActions.Name = "grpActions";
+            this.grpActions.Size = new System.Drawing.Size(450, 120);
+            this.grpActions.TabIndex = 5;
+            this.grpActions.TabStop = false;
+            this.grpActions.Text = "Actions";
+            // 
+            // btnScheduleTeam
+            // 
+            this.btnScheduleTeam.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(153)))), ((int)(((byte)(0)))));
+            this.btnScheduleTeam.FlatAppearance.BorderSize = 0;
+            this.btnScheduleTeam.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnScheduleTeam.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnScheduleTeam.ForeColor = System.Drawing.Color.White;
+            this.btnScheduleTeam.Location = new System.Drawing.Point(15, 30);
+            this.btnScheduleTeam.Name = "btnScheduleTeam";
+            this.btnScheduleTeam.Size = new System.Drawing.Size(200, 35);
+            this.btnScheduleTeam.TabIndex = 0;
+            this.btnScheduleTeam.Text = "Schedule Team";
+            this.btnScheduleTeam.UseVisualStyleBackColor = false;
+            this.btnScheduleTeam.Click += new System.EventHandler(this.btnScheduleTeam_Click);
+            // 
+            // btnShowRouting
+            // 
+            this.btnShowRouting.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(153)))), ((int)(((byte)(0)))), ((int)(((byte)(153)))));
+            this.btnShowRouting.FlatAppearance.BorderSize = 0;
+            this.btnShowRouting.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnShowRouting.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnShowRouting.ForeColor = System.Drawing.Color.White;
+            this.btnShowRouting.Location = new System.Drawing.Point(235, 30);
+            this.btnShowRouting.Name = "btnShowRouting";
+            this.btnShowRouting.Size = new System.Drawing.Size(200, 35);
+            this.btnShowRouting.TabIndex = 1;
+            this.btnShowRouting.Text = "Show Routing (MST)";
+            this.btnShowRouting.UseVisualStyleBackColor = false;
+            this.btnShowRouting.Click += new System.EventHandler(this.btnShowRouting_Click);
+            // 
+            // grpMSTVisualization
+            // 
+            this.grpMSTVisualization.Controls.Add(this.btnCloseMST);
+            this.grpMSTVisualization.Controls.Add(this.pnlMST);
+            this.grpMSTVisualization.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.grpMSTVisualization.Location = new System.Drawing.Point(490, 440);
+            this.grpMSTVisualization.Name = "grpMSTVisualization";
+            this.grpMSTVisualization.Size = new System.Drawing.Size(450, 120);
+            this.grpMSTVisualization.TabIndex = 6;
+            this.grpMSTVisualization.TabStop = false;
+            this.grpMSTVisualization.Text = "MST Routing Visualization";
+            this.grpMSTVisualization.Visible = false;
+            // 
+            // pnlMST
+            // 
+            this.pnlMST.BackColor = System.Drawing.Color.White;
+            this.pnlMST.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pnlMST.Location = new System.Drawing.Point(15, 25);
+            this.pnlMST.Name = "pnlMST";
+            this.pnlMST.Size = new System.Drawing.Size(340, 85);
+            this.pnlMST.TabIndex = 0;
+            this.pnlMST.Paint += new System.Windows.Forms.PaintEventHandler(this.pnlMST_Paint);
+            // 
+            // btnCloseMST
+            // 
+            this.btnCloseMST.BackColor = System.Drawing.Color.Gray;
+            this.btnCloseMST.FlatAppearance.BorderSize = 0;
+            this.btnCloseMST.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnCloseMST.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnCloseMST.ForeColor = System.Drawing.Color.White;
+            this.btnCloseMST.Location = new System.Drawing.Point(365, 50);
+            this.btnCloseMST.Name = "btnCloseMST";
+            this.btnCloseMST.Size = new System.Drawing.Size(70, 30);
+            this.btnCloseMST.TabIndex = 1;
+            this.btnCloseMST.Text = "Close";
+            this.btnCloseMST.UseVisualStyleBackColor = false;
+            this.btnCloseMST.Click += new System.EventHandler(this.btnCloseMST_Click);
             // 
             // btnBack
             // 
@@ -314,6 +402,8 @@ namespace MunicipalServiceApp
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(960, 620);
+            this.Controls.Add(this.grpMSTVisualization);
+            this.Controls.Add(this.grpActions);
             this.Controls.Add(this.btnBack);
             this.Controls.Add(this.lblStatus);
             this.Controls.Add(this.grpDetails);
@@ -329,6 +419,8 @@ namespace MunicipalServiceApp
             this.grpRequests.ResumeLayout(false);
             this.grpDetails.ResumeLayout(false);
             this.grpDetails.PerformLayout();
+            this.grpActions.ResumeLayout(false);
+            this.grpMSTVisualization.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -360,6 +452,12 @@ namespace MunicipalServiceApp
         private System.Windows.Forms.TextBox txtDetails;
         private System.Windows.Forms.Label lblStatus;
         private System.Windows.Forms.Button btnBack;
+        private System.Windows.Forms.GroupBox grpActions;
+        private System.Windows.Forms.Button btnScheduleTeam;
+        private System.Windows.Forms.Button btnShowRouting;
+        private System.Windows.Forms.GroupBox grpMSTVisualization;
+        private System.Windows.Forms.Panel pnlMST;
+        private System.Windows.Forms.Button btnCloseMST;
     }
 }
 

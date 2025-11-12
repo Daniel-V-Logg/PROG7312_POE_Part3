@@ -1,4 +1,5 @@
 using MunicipalServiceApp.Models;
+using MunicipalServiceApp.DataStructures;
 
 namespace MunicipalServiceApp.DataStructures
 {
@@ -26,15 +27,9 @@ namespace MunicipalServiceApp.DataStructures
         /// </summary>
         public PriorityQueue()
         {
-            _heap = new BinaryHeap<ServiceRequest>(HeapType.MinHeap, CompareByPriority);
-        }
-
-        /// <summary>
-        /// Comparison function for ServiceRequest by priority (1 = highest priority)
-        /// </summary>
-        private static int CompareByPriority(ServiceRequest x, ServiceRequest y)
-        {
-            return x.Priority.CompareTo(y.Priority);
+            // Since ServiceRequest implements IComparable<ServiceRequest>,
+            // we can use the default constructor of BinaryHeap
+            _heap = new BinaryHeap<ServiceRequest>(HeapType.MinHeap);
         }
 
         /// <summary>
@@ -71,4 +66,3 @@ namespace MunicipalServiceApp.DataStructures
         }
     }
 }
-

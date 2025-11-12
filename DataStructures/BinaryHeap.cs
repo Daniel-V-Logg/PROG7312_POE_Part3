@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Windows.Forms;
 
 namespace MunicipalServiceApp.DataStructures
 {
@@ -23,7 +24,7 @@ namespace MunicipalServiceApp.DataStructures
     /// Provides efficient insertion and extraction of the root element.
     /// </summary>
     /// <typeparam name="T">The type of elements stored in the heap</typeparam>
-    public class BinaryHeap<T>
+    public class BinaryHeap<T> where T : IComparable<T>
     {
         private readonly List<T> _heap;
         private readonly HeapType _heapType;
@@ -55,12 +56,17 @@ namespace MunicipalServiceApp.DataStructures
         /// Initializes a new instance of the BinaryHeap class with IComparable elements
         /// </summary>
         /// <param name="heapType">The type of heap (MinHeap or MaxHeap)</param>
-        public BinaryHeap(HeapType heapType) where T : IComparable<T>
+        
+        
+     
+        public BinaryHeap(HeapType heapType)
         {
-            _heap = new List<T>();
-            _heapType = heapType;
-            _comparison = (x, y) => x.CompareTo(y);
+                _heap = new List<T>();
+                _heapType = heapType;
+                _comparison = (x, y) => x.CompareTo(y);
         }
+        
+
 
         /// <summary>
         /// Inserts a new element into the heap and maintains heap property
